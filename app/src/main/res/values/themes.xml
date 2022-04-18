@@ -15,7 +15,7 @@
     </style>
 
     <style name="ToolbarTheme" parent="Theme.Fichas">
-        <item name="android:background">@color/color_primary</item>
+        <item name="android:background">@color/orange</item>
         <item name="android:textColorPrimary">@color/white</item>
         <item name="android:textColorSecondary">@color/white</item>
     </style>
