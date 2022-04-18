@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">Fichas</string>
+    <string name="calculator">Calculadora</string>
+    <string name="history">Histórico</string>
+    <string name="drawer_open">Aberto</string>
+    <string name="drawer_closed">Fechado</string>
+    <string name="last">Últ</string>
+    <string name="expression">Expressão</string>
+    <string name="result">Resultado</string>
+    <string name="registered_at">Registado em:</string>
+</resources>
