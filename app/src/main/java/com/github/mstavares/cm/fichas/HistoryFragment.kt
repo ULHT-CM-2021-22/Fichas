@@ -48,10 +48,7 @@ class HistoryFragment : Fragment() {
 
     private fun onOperationLongClick(operation: OperationUi): Boolean {
         Toast.makeText(context, getString(R.string.deleting), Toast.LENGTH_SHORT).show()
-        model.deleteOperation(operation.uuid) {
-            Toast.makeText(context, getString(R.string.operation_deleted, operation.uuid), Toast.LENGTH_LONG).show()
-            model.getHistory { updateHistory(it) }
-        }
+        model.deleteOperation(operation.uuid) { model.getHistory { updateHistory(it) } }
         return false
     }
 

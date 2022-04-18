@@ -12,5 +12,4 @@
     <string name="registry_saved">Registo guardado</string>
     <string name="no_history_available">Sem histórico disponível</string>
     <string name="deleting">A eliminar…</string>
-    <string name="operation_deleted">Operação %1$s eliminada</string>
 </resources>
