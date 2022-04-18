@@ -22,20 +22,13 @@ import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 
-private const val ARG_OPERATIONS = "ARG_OPERATIONS"
-
 class HistoryFragment : Fragment() {
 
-    private var operations: MutableList<OperationUi>? = null
+    private val model = Calculator
     private var adapter = HistoryAdapter(onClick = ::onOperationClick, onLongClick = ::onOperationLongClick)
     private lateinit var binding: FragmentHistoryBinding
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let { operations = it.getParcelableArrayList(ARG_OPERATIONS) }
-    }
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         (requireActivity() as AppCompatActivity).supportActionBar?.title = getString(R.string.history)
         val view = inflater.inflate(R.layout.fragment_history, container, false)
         binding = FragmentHistoryBinding.bind(view)
@@ -45,25 +38,39 @@ class HistoryFragment : Fragment() {
     override fun onStart() {
         super.onStart()
         binding.rvHistory.layoutManager = LinearLayoutManager(context)
-        operations?.let { adapter.updateItems(it) }
+        binding.rvHistory.adapter = adapter
+        model.getHistory { model.getHistory { updateHistory(it) } }
     }
 
     private fun onOperationClick(operation: OperationUi) {
         NavigationManager.goToOperationDetail(parentFragmentManager, operation)
     }
 
-    // TODO eliminar operação
     private fun onOperationLongClick(operation: OperationUi): Boolean {
+        Toast.makeText(context, getString(R.string.deleting), Toast.LENGTH_SHORT).show()
+        model.deleteOperation(operation.uuid) {
+            Toast.makeText(context, getString(R.string.operation_deleted, operation.uuid), Toast.LENGTH_LONG).show()
+            model.getHistory { updateHistory(it) }
+        }
         return false
     }
 
-    companion object {
-        @JvmStatic
-        fun newInstance(operations: ArrayList<OperationUi>) =
-            HistoryFragment().apply {
-                arguments = Bundle().apply {
-                    putParcelableArrayList(ARG_OPERATIONS, operations)
-                }
-            }
+    private fun updateHistory(operations: List<Operation>) {
+        val history = operations.map { OperationUi(it.uuid, it.expression, it.result, it.timestamp) }
+        CoroutineScope(Dispatchers.Main).launch {
+            showHistory(history.isNotEmpty())
+            adapter.updateItems(history)
+        }
     }
+
+    private fun showHistory(show: Boolean) {
+        if (show) {
+            binding.rvHistory.visibility = View.VISIBLE
+            binding.textNoHistoryAvailable.visibility = View.GONE
+        } else {
+            binding.rvHistory.visibility = View.GONE
+            binding.textNoHistoryAvailable.visibility = View.VISIBLE
+        }
+    }
+
 }

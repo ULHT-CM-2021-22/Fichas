@@ -16,8 +16,8 @@ object NavigationManager {
         placeFragment(fm, CalculatorFragment())
     }
 
-    fun goToHistoryFragment(fm: FragmentManager, operations: ArrayList<OperationUi>) {
-        placeFragment(fm, HistoryFragment.newInstance(operations))
+    fun goToHistoryFragment(fm: FragmentManager) {
+        placeFragment(fm, HistoryFragment())
     }
 
     fun goToOperationDetail(fm: FragmentManager, operation: OperationUi) {

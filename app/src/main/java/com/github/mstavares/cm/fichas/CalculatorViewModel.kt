@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 
 class CalculatorViewModel : ViewModel() {
 
-    private val model = Calculator()
+    private val model = Calculator
 
     fun getDisplayValue(): String {
         return model.display
@@ -22,12 +22,12 @@ class CalculatorViewModel : ViewModel() {
         return model.deleteLastSymbol()
     }
 
-    fun onClickGetLastOperation(): String {
-        return model.getLastOperation()
+    fun onClickGetLastOperation(onFinished: (String) -> Unit) {
+        model.getLastOperation(onFinished)
     }
 
-    fun onClickEquals(): String {
-        val result = model.performOperation()
+    fun onClickEquals(onSaved: () -> Unit): String {
+        val result = model.performOperation(onSaved)
         return if(result % 1 == 0.0) result.toLong().toString() else result.toString()
     }
 
