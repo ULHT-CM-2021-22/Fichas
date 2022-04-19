@@ -8,6 +8,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.github.mstavares.cm.fichas.databinding.FragmentCalculatorBinding
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -18,6 +19,7 @@ class CalculatorFragment : Fragment() {
 
     private lateinit var binding: FragmentCalculatorBinding
     private lateinit var viewModel: CalculatorViewModel
+    private var adapter = HistoryAdapter(onClick = ::onOperationClick, onLongClick = ::onOperationLongClick)
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         (requireActivity() as AppCompatActivity).supportActionBar?.title = getString(R.string.calculator)
@@ -29,6 +31,9 @@ class CalculatorFragment : Fragment() {
 
     override fun onStart() {
         super.onStart()
+        binding.rvHistory?.layoutManager = LinearLayoutManager(context)
+        binding.rvHistory?.adapter = adapter
+        viewModel.onGetHistory { updateHistory(it) }
         binding.textVisor.text = viewModel.getDisplayValue()
         binding.button0.setOnClickListener { onClickSymbol("0") }
         binding.button00.setOnClickListener { onClickSymbol("00") }
@@ -61,6 +66,7 @@ class CalculatorFragment : Fragment() {
         val displayUpdated = viewModel.onClickEquals {
             CoroutineScope(Dispatchers.Main).launch {
                 Toast.makeText(context, getString(R.string.registry_saved), Toast.LENGTH_LONG).show()
+                viewModel.onGetHistory { updateHistory(it) }
             }
         }
         binding.textVisor.text = displayUpdated
@@ -79,6 +85,23 @@ class CalculatorFragment : Fragment() {
     private fun onClickGetPreviousOperation() {
         viewModel.onClickGetLastOperation {
             binding.textVisor.text = it
+        }
+    }
+
+    private fun onOperationClick(operation: OperationUi) {
+        NavigationManager.goToOperationDetail(parentFragmentManager, operation)
+    }
+
+    private fun onOperationLongClick(operation: OperationUi): Boolean {
+        Toast.makeText(context, getString(R.string.deleting), Toast.LENGTH_SHORT).show()
+        viewModel.onDeleteOperation(operation.uuid) { viewModel.onGetHistory { updateHistory(it) } }
+        return false
+    }
+
+    private fun updateHistory(operations: List<Operation>) {
+        val history = operations.map { OperationUi(it.uuid, it.expression, it.result, it.timestamp) }
+        CoroutineScope(Dispatchers.Main).launch {
+            adapter.updateItems(history)
         }
     }
 

@@ -7,30 +7,30 @@ import net.objecthunter.exp4j.ExpressionBuilder
 
 object Calculator {
 
-    var display: String = "0"
+    var expression: String = "0"
         private set
     private val history = mutableListOf<Operation>()
 
     fun insertSymbol(symbol: String): String {
-        display = if(display == "0") symbol else "$display$symbol"
-        return display
+        expression = if(expression == "0") symbol else "$expression$symbol"
+        return expression
     }
 
     fun clear(): String {
-        display = "0"
-        return display
+        expression = "0"
+        return expression
     }
 
     fun deleteLastSymbol(): String {
-        display = if(display.length > 1) display.dropLast(1) else "0"
-        return display
+        expression = if(expression.length > 1) expression.dropLast(1) else "0"
+        return expression
     }
 
     fun getLastOperation(onFinished: (String) -> Unit) {
         CoroutineScope(Dispatchers.IO).launch {
             Thread.sleep(10 * 1000)
-            display = if (history.size > 0) history[history.size - 1].expression else display
-            onFinished(display)
+            expression = if (history.size > 0) history[history.size - 1].expression else expression
+            onFinished(expression)
         }
     }
 
@@ -43,16 +43,15 @@ object Calculator {
         }
     }
 
-    fun performOperation(onSaved: () -> Unit): Double {
-        val expressionBuilder = ExpressionBuilder(display).build()
+    fun performOperation(onSaved: () -> Unit) {
+        val expressionBuilder = ExpressionBuilder(expression).build()
         val result = expressionBuilder.evaluate()
-        val operation = Operation(expression = display, result = result)
+        val operation = Operation(expression = expression, result = result)
+        expression = result.toString()
         CoroutineScope(Dispatchers.IO).launch {
             addToHistory(operation)
             onSaved()
         }
-        display = result.toString()
-        return result
     }
 
     fun getHistory(onFinished: (List<Operation>) -> Unit) {

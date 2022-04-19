@@ -39,7 +39,7 @@ class HistoryFragment : Fragment() {
         super.onStart()
         binding.rvHistory.layoutManager = LinearLayoutManager(context)
         binding.rvHistory.adapter = adapter
-        model.getHistory { model.getHistory { updateHistory(it) } }
+        model.getHistory { updateHistory(it) }
     }
 
     private fun onOperationClick(operation: OperationUi) {
