@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">Fichas</string>
+    <string name="calculator">Calculadora</string>
+    <string name="history">Histórico</string>
+    <string name="drawer_open">Aberto</string>
+    <string name="drawer_closed">Fechado</string>
+    <string name="last">Últ</string>
+    <string name="uuid">UUID</string>
+    <string name="expression">Expressão</string>
+    <string name="result">Resultado</string>
+    <string name="registered_at">Registado em:</string>
+    <string name="registry_saved">Registo guardado</string>
+    <string name="no_history_available">Sem histórico disponível</string>
+    <string name="deleting">A eliminar…</string>
+</resources>
