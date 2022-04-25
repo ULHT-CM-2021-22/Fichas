@@ -42,7 +42,7 @@ class MapFragment : Fragment(), OnLocationChangedListener {
 
     override fun onDestroy() {
         super.onDestroy()
-        FusedLocation.unregisterListener()
+        FusedLocation.unregisterListener(this)
     }
 
 }

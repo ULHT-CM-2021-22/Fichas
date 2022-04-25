@@ -1,6 +1,7 @@
 package com.github.mstavares.cm.fichas
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,8 +15,11 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import net.objecthunter.exp4j.ExpressionBuilder
+import java.util.*
 
-class CalculatorFragment : Fragment() {
+class CalculatorFragment : Fragment(), OnLightValueChangedListener {
+
+    private val TAG = CalculatorFragment::class.java.simpleName
 
     private lateinit var binding: FragmentCalculatorBinding
     private lateinit var viewModel: CalculatorViewModel
@@ -31,6 +35,7 @@ class CalculatorFragment : Fragment() {
 
     override fun onStart() {
         super.onStart()
+        Light.registerListener(this)
         binding.rvHistory?.layoutManager = LinearLayoutManager(requireContext())
         binding.rvHistory?.adapter = adapter
         viewModel.onGetHistory { updateHistory(it) }
@@ -105,6 +110,15 @@ class CalculatorFragment : Fragment() {
         CoroutineScope(Dispatchers.Main).launch {
             adapter.updateItems(history)
         }
+    }
+
+    override fun onLightValueChanged(values: FloatArray) {
+        Log.i(TAG, values.toString())
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Light.unregisterListener()
     }
 
 }

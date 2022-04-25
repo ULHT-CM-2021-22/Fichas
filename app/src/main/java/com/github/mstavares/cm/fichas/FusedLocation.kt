@@ -43,21 +43,21 @@ class FusedLocation private constructor(context: Context) : LocationCallback() {
 
     companion object {
         // Se quisermos ter vários listeners isto tem de ser uma lista
-        private var listener: OnLocationChangedListener? = null
+        private val listeners = mutableListOf<OnLocationChangedListener>()
         private var instance: FusedLocation? = null
 
         fun registerListener(listener: OnLocationChangedListener) {
-            this.listener = listener
+            listeners.add(listener)
         }
 
-        fun unregisterListener() {
-            listener = null
+        fun unregisterListener(listener: OnLocationChangedListener) {
+            listeners.remove(listener)
         }
 
         // Se tivermos vários listeners, temos de os notificar com um forEach
         fun notifyListener(locationResult: LocationResult) {
             val location = locationResult.lastLocation
-            listener?.onLocationChanged(location.latitude, location.longitude)
+            listeners.forEach { it.onLocationChanged(location.latitude, location.longitude) }
         }
 
         // Só teremos uma instância em execução
