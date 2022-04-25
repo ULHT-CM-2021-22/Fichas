@@ -24,11 +24,12 @@ import kotlin.collections.ArrayList
 
 class HistoryFragment : Fragment() {
 
-    private val model = Calculator
+    private lateinit var model: Calculator
     private var adapter = HistoryAdapter(onClick = ::onOperationClick, onLongClick = ::onOperationLongClick)
     private lateinit var binding: FragmentHistoryBinding
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+        model = Calculator(CalculatorDatabase.getInstance(requireContext()).operationDao())
         (requireActivity() as AppCompatActivity).supportActionBar?.title = getString(R.string.history)
         val view = inflater.inflate(R.layout.fragment_history, container, false)
         binding = FragmentHistoryBinding.bind(view)
@@ -37,7 +38,7 @@ class HistoryFragment : Fragment() {
 
     override fun onStart() {
         super.onStart()
-        binding.rvHistory.layoutManager = LinearLayoutManager(context)
+        binding.rvHistory.layoutManager = LinearLayoutManager(requireContext())
         binding.rvHistory.adapter = adapter
         model.getHistory { updateHistory(it) }
     }
@@ -47,7 +48,7 @@ class HistoryFragment : Fragment() {
     }
 
     private fun onOperationLongClick(operation: OperationUi): Boolean {
-        Toast.makeText(context, getString(R.string.deleting), Toast.LENGTH_SHORT).show()
+        Toast.makeText(requireContext(), getString(R.string.deleting), Toast.LENGTH_SHORT).show()
         model.deleteOperation(operation.uuid) { model.getHistory { updateHistory(it) } }
         return false
     }

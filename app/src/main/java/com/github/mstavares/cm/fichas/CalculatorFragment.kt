@@ -31,7 +31,7 @@ class CalculatorFragment : Fragment() {
 
     override fun onStart() {
         super.onStart()
-        binding.rvHistory?.layoutManager = LinearLayoutManager(context)
+        binding.rvHistory?.layoutManager = LinearLayoutManager(requireContext())
         binding.rvHistory?.adapter = adapter
         viewModel.onGetHistory { updateHistory(it) }
         binding.textVisor.text = viewModel.getDisplayValue()
@@ -84,7 +84,9 @@ class CalculatorFragment : Fragment() {
 
     private fun onClickGetPreviousOperation() {
         viewModel.onClickGetLastOperation {
-            binding.textVisor.text = it
+            CoroutineScope(Dispatchers.Main).launch {
+                binding.textVisor.text = it
+            }
         }
     }
 

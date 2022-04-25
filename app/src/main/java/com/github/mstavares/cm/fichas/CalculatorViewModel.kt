@@ -1,10 +1,11 @@
 package com.github.mstavares.cm.fichas
 
-import androidx.lifecycle.ViewModel
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 
-class CalculatorViewModel : ViewModel() {
+class CalculatorViewModel(application: Application) : AndroidViewModel(application)  {
 
-    private val model = Calculator
+    private val model = Calculator(CalculatorDatabase.getInstance(application).operationDao())
 
     fun getDisplayValue(): String {
         return model.expression
