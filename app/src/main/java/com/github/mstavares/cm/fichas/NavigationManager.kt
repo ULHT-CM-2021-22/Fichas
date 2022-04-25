@@ -24,4 +24,8 @@ object NavigationManager {
         placeFragment(fm, OperationDetailFragment.newInstance(operation))
     }
 
+    fun goToMapFragment(fm: FragmentManager) {
+        placeFragment(fm, MapFragment())
+    }
+
 }
