@@ -41,8 +41,6 @@ class CalculatorViewModel(application: Application) : AndroidViewModel(applicati
 
     fun onClickEquals(onFinished: () -> Unit) {
         model.performOperation(onFinished)
-        //val result = getDisplayValue().toDouble()
-        //return if(result % 1 == 0.0) result.toLong().toString() else result.toString()
     }
 
 }

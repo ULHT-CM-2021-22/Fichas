@@ -5,7 +5,6 @@ import net.objecthunter.exp4j.ExpressionBuilder
 abstract class Calculator {
 
     var expression: String = "0"
-        private set
 
     fun insertSymbol(symbol: String): String {
         expression = if(expression == "0") symbol else "$expression$symbol"

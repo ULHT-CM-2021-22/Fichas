@@ -7,19 +7,22 @@ class CalculatorRepository(private val context: Context, private val local: Calc
     fun getExpression() = local.expression
 
     fun insertSymbol(symbol: String): String {
-        return local.insertSymbol(symbol)
+        return remote.insertSymbol(symbol)
     }
 
     fun clear(): String {
-        return local.clear()
+        return remote.clear()
     }
 
     fun deleteLastSymbol(): String {
-        return local.deleteLastSymbol()
+        return remote.deleteLastSymbol()
     }
 
     fun performOperation(onFinished: () -> Unit) {
-        remote.performOperation(onFinished)
+        remote.performOperation {
+            local.expression = remote.expression
+            onFinished()
+        }
     }
 
     fun getLastOperation(onFinished: (String) -> Unit) {
