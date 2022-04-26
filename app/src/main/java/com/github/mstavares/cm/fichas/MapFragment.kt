@@ -1,5 +1,6 @@
 package com.github.mstavares.cm.fichas
 
+import android.location.Geocoder
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,14 +11,17 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
+import java.util.*
 
 class MapFragment : Fragment(), OnLocationChangedListener {
 
     private lateinit var binding: FragmentMapBinding
+    private lateinit var geocoder: Geocoder
     private var map: GoogleMap? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         val view = inflater.inflate(R.layout.fragment_map, container, false)
+        geocoder = Geocoder(context, Locale.getDefault())
         binding = FragmentMapBinding.bind(view)
         binding.map.onCreate(savedInstanceState)
         binding.map.getMapAsync {
@@ -33,11 +37,22 @@ class MapFragment : Fragment(), OnLocationChangedListener {
     }
 
     override fun onLocationChanged(latitude: Double, longitude: Double) {
+        placeCamera(latitude, longitude)
+        placeCityName(latitude, longitude)
+    }
+
+    private fun placeCamera(latitude: Double, longitude: Double) {
         val cameraPosition = CameraPosition.Builder()
             .target(LatLng(latitude, longitude))
             .zoom(12f)
             .build()
         map?.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition))
+    }
+
+    private fun placeCityName(latitude: Double, longitude: Double) {
+        val addresses = geocoder.getFromLocation(latitude, longitude, 5)
+        val location = addresses.first { it.locality != null && it.locality.isNotEmpty() }
+        binding.tvCityName.text = location.locality
     }
 
     override fun onDestroy() {
