@@ -1,7 +1,6 @@
 package com.github.mstavares.cm.fichas
 
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -9,18 +8,10 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.github.mstavares.cm.fichas.databinding.FragmentCalculatorBinding
 import com.github.mstavares.cm.fichas.databinding.FragmentHistoryBinding
-import com.google.gson.Gson
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import okhttp3.OkHttpClient
-import okhttp3.Request
-import okhttp3.ResponseBody
-import java.text.SimpleDateFormat
-import java.util.*
-import kotlin.collections.ArrayList
 
 class HistoryFragment : Fragment() {
 
@@ -29,7 +20,7 @@ class HistoryFragment : Fragment() {
     private lateinit var binding: FragmentHistoryBinding
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        model = Calculator(CalculatorDatabase.getInstance(requireContext()).operationDao())
+        model = CalculatorRoom(CalculatorDatabase.getInstance(requireContext()).operationDao())
         (requireActivity() as AppCompatActivity).supportActionBar?.title = getString(R.string.history)
         val view = inflater.inflate(R.layout.fragment_history, container, false)
         binding = FragmentHistoryBinding.bind(view)
@@ -53,7 +44,7 @@ class HistoryFragment : Fragment() {
         return false
     }
 
-    private fun updateHistory(operations: List<Operation>) {
+    private fun updateHistory(operations: List<OperationUi>) {
         val history = operations.map { OperationUi(it.uuid, it.expression, it.result, it.timestamp) }
         CoroutineScope(Dispatchers.Main).launch {
             showHistory(history.isNotEmpty())

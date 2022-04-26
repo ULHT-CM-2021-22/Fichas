@@ -14,8 +14,6 @@ import com.github.mstavares.cm.fichas.databinding.FragmentCalculatorBinding
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import net.objecthunter.exp4j.ExpressionBuilder
-import java.util.*
 
 class CalculatorFragment : Fragment(), OnLightValueChangedListener {
 
@@ -105,7 +103,7 @@ class CalculatorFragment : Fragment(), OnLightValueChangedListener {
         return false
     }
 
-    private fun updateHistory(operations: List<Operation>) {
+    private fun updateHistory(operations: List<OperationUi>) {
         val history = operations.map { OperationUi(it.uuid, it.expression, it.result, it.timestamp) }
         CoroutineScope(Dispatchers.Main).launch {
             adapter.updateItems(history)

@@ -5,7 +5,7 @@ import androidx.lifecycle.AndroidViewModel
 
 class CalculatorViewModel(application: Application) : AndroidViewModel(application)  {
 
-    private val model = Calculator(CalculatorDatabase.getInstance(application).operationDao())
+    private val model = CalculatorRoom(CalculatorDatabase.getInstance(application).operationDao())
 
     fun getDisplayValue(): String {
         return model.expression
@@ -27,7 +27,7 @@ class CalculatorViewModel(application: Application) : AndroidViewModel(applicati
         model.getLastOperation(onFinished)
     }
 
-    fun onGetHistory(onFinished: (List<Operation>) -> Unit) {
+    fun onGetHistory(onFinished: (List<OperationUi>) -> Unit) {
         model.getHistory(onFinished)
     }
 

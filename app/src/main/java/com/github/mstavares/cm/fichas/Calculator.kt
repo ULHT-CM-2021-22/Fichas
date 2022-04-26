@@ -1,12 +1,8 @@
 package com.github.mstavares.cm.fichas
 
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import net.objecthunter.exp4j.ExpressionBuilder
-import java.util.*
 
-class Calculator(private val dao: OperationDao) {
+abstract class Calculator {
 
     var expression: String = "0"
         private set
@@ -26,38 +22,15 @@ class Calculator(private val dao: OperationDao) {
         return expression
     }
 
-    fun getLastOperation(onFinished: (String) -> Unit) {
-        CoroutineScope(Dispatchers.IO).launch {
-            getHistory { history ->
-                expression = if (history.isNotEmpty()) history[history.size - 1].expression else expression
-                onFinished(expression)
-            }
-        }
-    }
-
-    fun deleteOperation(uuid: String, onSuccess: () -> Unit) {
-        CoroutineScope(Dispatchers.IO).launch {
-            val result = dao.delete(uuid)
-            // se == 1 eliminou o registo, se for 0 não encontrou o registo a eliminar
-            if(result == 1) onSuccess()
-        }
-    }
-
-    fun performOperation(onFinished: () -> Unit) {
+    open fun performOperation(onFinished: () -> Unit) {
         val expressionBuilder = ExpressionBuilder(expression).build()
         val result = expressionBuilder.evaluate()
-        val operation = Operation(expression = expression, result = result, timestamp = Date().time)
         expression = result.toString()
-        CoroutineScope(Dispatchers.IO).launch {
-            dao.insert(operation)
-            onFinished()
-        }
+        onFinished()
     }
 
-    fun getHistory(onFinished: (List<Operation>) -> Unit) {
-        CoroutineScope(Dispatchers.IO).launch {
-            onFinished(dao.getAll())
-        }
-    }
+    abstract fun getLastOperation(onFinished: (String) -> Unit)
+    abstract fun deleteOperation(uuid: String, onSuccess: () -> Unit)
+    abstract fun getHistory(onFinished: (List<OperationUi>) -> Unit)
 
 }

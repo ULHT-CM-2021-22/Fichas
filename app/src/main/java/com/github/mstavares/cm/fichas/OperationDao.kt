@@ -8,13 +8,16 @@ import androidx.room.Query
 interface OperationDao {
 
     @Insert
-    suspend fun insert(operation: Operation)
+    suspend fun insert(operation: OperationRoom)
 
-    @Query("SELECT * FROM operation")
-    suspend fun getAll(): List<Operation>
+    @Query("SELECT * FROM operation ORDER BY timestamp ASC")
+    suspend fun getAll(): List<OperationRoom>
 
     @Query("SELECT * FROM operation WHERE uuid = :uuid")
-    suspend fun getById(uuid: String): Operation
+    suspend fun getById(uuid: String): OperationRoom
+
+    @Query("SELECT * FROM operation ORDER BY timestamp DESC LIMIT 1")
+    suspend fun getLastOperation(): OperationRoom
 
     @Query("DELETE FROM operation WHERE uuid = :uuid")
     suspend fun delete(uuid: String): Int
