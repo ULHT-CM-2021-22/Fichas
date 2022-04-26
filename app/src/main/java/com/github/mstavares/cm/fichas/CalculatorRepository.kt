@@ -4,6 +4,8 @@ import android.content.Context
 
 class CalculatorRepository(private val context: Context, private val local: Calculator, val remote: Calculator) {
 
+    fun getExpression() = local.expression
+
     fun insertSymbol(symbol: String): String {
         return local.insertSymbol(symbol)
     }
@@ -17,8 +19,7 @@ class CalculatorRepository(private val context: Context, private val local: Calc
     }
 
     fun performOperation(onFinished: () -> Unit) {
-        //remote.performOperation(onFinished)
-        local.performOperation(onFinished)
+        remote.performOperation(onFinished)
     }
 
     fun getLastOperation(onFinished: (String) -> Unit) {
@@ -30,7 +31,7 @@ class CalculatorRepository(private val context: Context, private val local: Calc
     }
 
     fun deleteOperation(uuid: String, onSuccess: () -> Unit) {
-
+        remote.deleteOperation(uuid, onSuccess)
     }
 
     fun getHistory(onFinished: (List<OperationUi>) -> Unit) {

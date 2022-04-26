@@ -5,10 +5,14 @@ import androidx.lifecycle.AndroidViewModel
 
 class CalculatorViewModel(application: Application) : AndroidViewModel(application)  {
 
-    private val model = CalculatorRoom(CalculatorDatabase.getInstance(application).operationDao())
+    private val model = CalculatorRepository(
+        application,
+        CalculatorRoom(CalculatorDatabase.getInstance(application).operationDao()),
+        CalculatorRetrofit(RetrofitBuilder.getInstance("https://cm-calculadora.herokuapp.com/api/"))
+    )
 
     fun getDisplayValue(): String {
-        return model.expression
+        return model.getExpression()
     }
 
     fun onClickSymbol(symbol: String): String {
@@ -35,10 +39,10 @@ class CalculatorViewModel(application: Application) : AndroidViewModel(applicati
         model.deleteOperation(uuid, onSuccess)
     }
 
-    fun onClickEquals(onSaved: () -> Unit): String {
-        model.performOperation(onSaved)
-        val result = getDisplayValue().toDouble()
-        return if(result % 1 == 0.0) result.toLong().toString() else result.toString()
+    fun onClickEquals(onFinished: () -> Unit) {
+        model.performOperation(onFinished)
+        //val result = getDisplayValue().toDouble()
+        //return if(result % 1 == 0.0) result.toLong().toString() else result.toString()
     }
 
 }

@@ -6,8 +6,8 @@ class CalculatorApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        FusedLocation.start(this)
-        Light.start(this)
+        //FusedLocation.start(this)
+        //Light.start(this)
     }
 
 }

@@ -66,13 +66,13 @@ class CalculatorFragment : Fragment(), OnLightValueChangedListener {
     }
 
     private fun onClickEquals() {
-        val displayUpdated = viewModel.onClickEquals {
+        viewModel.onClickEquals {
             CoroutineScope(Dispatchers.Main).launch {
                 Toast.makeText(context, getString(R.string.registry_saved), Toast.LENGTH_LONG).show()
+                binding.textVisor.text = viewModel.getDisplayValue()
                 viewModel.onGetHistory { updateHistory(it) }
             }
         }
-        binding.textVisor.text = displayUpdated
     }
 
     private fun onClickClear() {
