@@ -29,6 +29,7 @@ abstract class Calculator {
         onFinished()
     }
 
+    abstract fun refreshOperations(operations: List<OperationUi>)
     abstract fun getLastOperation(onFinished: (String) -> Unit)
     abstract fun deleteOperation(uuid: String, onSuccess: () -> Unit)
     abstract fun getHistory(onFinished: (List<OperationUi>) -> Unit)

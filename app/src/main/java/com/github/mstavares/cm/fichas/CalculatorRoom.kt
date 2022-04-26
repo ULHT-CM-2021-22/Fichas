@@ -7,6 +7,14 @@ import java.util.*
 
 class CalculatorRoom(private val dao: OperationDao) : Calculator() {
 
+    override fun refreshOperations(operations: List<OperationUi>) {
+        CoroutineScope(Dispatchers.IO).launch {
+            val history = operations.map { OperationRoom(it.uuid, it.expression, it.result, it.timestamp) }
+            dao.deleteAll()
+            dao.insertAll(history)
+        }
+    }
+
     override fun performOperation(onFinished: () -> Unit) {
         val currentExpression = expression
         super.performOperation {

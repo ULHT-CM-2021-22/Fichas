@@ -1,4 +1,47 @@
 package com.github.mstavares.cm.fichas
 
-class CalculatorRepository(private val local: Calculator, val remote: Calculator) {
+import android.content.Context
+
+class CalculatorRepository(private val context: Context, private val local: Calculator, val remote: Calculator) {
+
+    fun insertSymbol(symbol: String): String {
+        return local.insertSymbol(symbol)
+    }
+
+    fun clear(): String {
+        return local.clear()
+    }
+
+    fun deleteLastSymbol(): String {
+        return local.deleteLastSymbol()
+    }
+
+    fun performOperation(onFinished: () -> Unit) {
+        //remote.performOperation(onFinished)
+        local.performOperation(onFinished)
+    }
+
+    fun getLastOperation(onFinished: (String) -> Unit) {
+        if(ConnectivityUtil.isOnline(context)) {
+            remote.getLastOperation(onFinished)
+        } else {
+            local.getLastOperation(onFinished)
+        }
+    }
+
+    fun deleteOperation(uuid: String, onSuccess: () -> Unit) {
+
+    }
+
+    fun getHistory(onFinished: (List<OperationUi>) -> Unit) {
+        if(ConnectivityUtil.isOnline(context)) {
+            remote.getHistory { history ->
+                local.refreshOperations(history)
+                onFinished(history)
+            }
+        } else {
+            local.getHistory(onFinished)
+        }
+    }
+
 }

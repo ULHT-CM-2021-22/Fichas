@@ -23,7 +23,7 @@ class CalculatorRetrofit(retrofit: Retrofit) : Calculator() {
                 service.insert(request).enqueue(object: Callback<String> {
 
                     override fun onResponse(call: Call<String>, response: Response<String>) {
-
+                        Log.i(TAG, response.body() ?: "Stored remotely")
                     }
 
                     override fun onFailure(call: Call<String>, t: Throwable) {
@@ -61,4 +61,7 @@ class CalculatorRetrofit(retrofit: Retrofit) : Calculator() {
             })
         }
     }
+
+    override fun refreshOperations(operations: List<OperationUi>) {}
+
 }
