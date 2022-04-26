@@ -6,7 +6,7 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 
 // Este array deverá conter todas as entidades do modelo de dados
-@Database(entities = [OperationRoom::class], version = 1)
+@Database(entities = [OperationRoom::class], version = 2)
 abstract class CalculatorDatabase : RoomDatabase() {
 
     abstract fun operationDao(): OperationDao
@@ -22,7 +22,9 @@ abstract class CalculatorDatabase : RoomDatabase() {
                         applicationContext,
                         CalculatorDatabase::class.java,
                         "calculator_db"
-                    ).build()
+                    )
+                        .fallbackToDestructiveMigration()
+                        .build()
                 }
                 return instance as CalculatorDatabase
             }
