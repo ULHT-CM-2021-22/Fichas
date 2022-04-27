@@ -28,9 +28,10 @@ abstract class Calculator {
         onFinished()
     }
 
-    abstract fun refreshOperations(operations: List<OperationUi>)
+    abstract fun insertOperations(operations: List<OperationUi>, onFinished: (List<OperationUi>) -> Unit)
     abstract fun getLastOperation(onFinished: (String) -> Unit)
-    abstract fun deleteOperation(uuid: String, onSuccess: () -> Unit)
+    abstract fun deleteOperation(uuid: String, onFinished: () -> Unit)
+    abstract fun deleteAllOperations(onFinished: () -> Unit)
     abstract fun getHistory(onFinished: (List<OperationUi>) -> Unit)
 
 }

@@ -40,8 +40,11 @@ class CalculatorRepository(private val context: Context, private val local: Calc
     fun getHistory(onFinished: (List<OperationUi>) -> Unit) {
         if(ConnectivityUtil.isOnline(context)) {
             remote.getHistory { history ->
-                local.refreshOperations(history)
-                onFinished(history)
+                local.deleteAllOperations {
+                    local.insertOperations(history) {
+                        onFinished(history)
+                    }
+                }
             }
         } else {
             local.getHistory(onFinished)
