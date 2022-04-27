@@ -8,17 +8,14 @@ import okhttp3.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-class RetrofitBuilder {
+object RetrofitBuilder {
 
-    companion object {
-
-        fun getInstance(path: String): Retrofit {
-            return Retrofit.Builder()
-                .baseUrl(path)
-                .addCallAdapterFactory(CoroutineCallAdapterFactory())
-                .addConverterFactory(GsonConverterFactory.create())
-                .build()
-        }
+    fun getInstance(path: String): Retrofit {
+        return Retrofit.Builder()
+            .baseUrl(path)
+            .addCallAdapterFactory(CoroutineCallAdapterFactory())
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
     }
 
 }
