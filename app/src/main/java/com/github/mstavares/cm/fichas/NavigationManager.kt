@@ -28,4 +28,8 @@ object NavigationManager {
         placeFragment(fm, MapFragment())
     }
 
+    fun goToPhotoBoothFragment(fm: FragmentManager) {
+        placeFragment(fm, PhotoBoothFragment())
+    }
+
 }

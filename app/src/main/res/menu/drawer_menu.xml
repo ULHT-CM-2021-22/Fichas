@@ -14,6 +14,10 @@
             android:id="@+id/nav_map"
             android:icon="@drawable/ic_map"
             android:title="@string/map"/>
+        <item
+            android:id="@+id/nav_photo_booth"
+            android:icon="@drawable/ic_camera"
+            android:title="@string/photo_booth"/>
     </group>
 
 </menu>

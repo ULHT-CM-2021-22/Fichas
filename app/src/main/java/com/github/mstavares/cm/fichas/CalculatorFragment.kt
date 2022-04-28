@@ -34,7 +34,6 @@ class CalculatorFragment : Fragment(), OnLightValueChangedListener {
     override fun onStart() {
         super.onStart()
         Light.registerListener(this)
-        binding.rvHistory?.layoutManager = LinearLayoutManager(requireContext())
         binding.rvHistory?.adapter = adapter
         viewModel.onGetHistory { updateHistory(it) }
         binding.textVisor.text = viewModel.getDisplayValue()

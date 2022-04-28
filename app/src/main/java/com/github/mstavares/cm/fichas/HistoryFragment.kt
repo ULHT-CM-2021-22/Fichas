@@ -29,7 +29,6 @@ class HistoryFragment : Fragment() {
 
     override fun onStart() {
         super.onStart()
-        binding.rvHistory.layoutManager = LinearLayoutManager(requireContext())
         binding.rvHistory.adapter = adapter
         model.getHistory { updateHistory(it) }
     }
