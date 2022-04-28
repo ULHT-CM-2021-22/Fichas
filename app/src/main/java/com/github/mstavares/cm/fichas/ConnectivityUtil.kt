@@ -2,7 +2,6 @@ package com.github.mstavares.cm.fichas
 
 import android.content.Context
 import android.net.ConnectivityManager
-import android.net.NetworkCapabilities
 import android.net.NetworkCapabilities.*
 import android.util.Log
 

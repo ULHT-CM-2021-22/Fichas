@@ -2,7 +2,8 @@ package com.github.mstavares.cm.fichas
 
 import android.content.Context
 
-class CalculatorRepository(private val context: Context, private val local: Calculator, val remote: Calculator) {
+class CalculatorRepository private constructor(private val context: Context,
+    private val local: Calculator, private val remote: Calculator) {
 
     fun getExpression() = local.expression
 
@@ -49,6 +50,24 @@ class CalculatorRepository(private val context: Context, private val local: Calc
         } else {
             local.getHistory(onFinished)
         }
+    }
+
+    companion object {
+
+        private var instance: CalculatorRepository? = null
+
+        fun init(context: Context, local: Calculator, remote: Calculator) {
+            synchronized(this) {
+                if(instance == null) {
+                    instance = CalculatorRepository(context, local, remote)
+                }
+            }
+        }
+
+        fun getInstance(): CalculatorRepository {
+            return instance ?: throw IllegalStateException("Repository not initialized")
+        }
+
     }
 
 }
