@@ -8,6 +8,10 @@ class CalculatorApplication : Application() {
         super.onCreate()
         FusedLocation.start(this)
         Light.start(this)
+        CalculatorRepository.init(this,
+            CalculatorRoom(CalculatorDatabase.getInstance(this).operationDao()),
+            CalculatorRetrofit(RetrofitBuilder.getInstance("https://cm-calculadora.herokuapp.com/api/"))
+        )
     }
 
 }

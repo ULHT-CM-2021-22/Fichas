@@ -1,15 +1,10 @@
 package com.github.mstavares.cm.fichas
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 
-class CalculatorViewModel(application: Application) : AndroidViewModel(application)  {
+class CalculatorViewModel : ViewModel()  {
 
-    private val model = CalculatorRepository(
-        application,
-        CalculatorRoom(CalculatorDatabase.getInstance(application).operationDao()),
-        CalculatorRetrofit(RetrofitBuilder.getInstance("https://cm-calculadora.herokuapp.com/api/"))
-    )
+    private val model = CalculatorRepository.getInstance()
 
     fun getDisplayValue(): String {
         return model.getExpression()
