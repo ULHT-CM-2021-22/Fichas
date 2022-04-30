@@ -36,7 +36,7 @@ class PhotoBoothFragment : Fragment() {
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        (requireActivity() as AppCompatActivity).supportActionBar?.title = getString(R.string.photo_booth)
+        (requireActivity() as AppCompatActivity).supportActionBar?.title = getString(R.string.photobooth)
         val view = inflater.inflate(R.layout.fragment_photo_booth, container, false)
         viewModel = ViewModelProvider(this).get(PhotoBoothViewModel::class.java)
         binding = FragmentPhotoBoothBinding.bind(view)
