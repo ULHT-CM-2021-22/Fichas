@@ -59,7 +59,7 @@ class MainActivity : AppCompatActivity() {
             R.id.nav_calculator -> NavigationManager.goToCalculatorFragment(supportFragmentManager)
             R.id.nav_history -> NavigationManager.goToHistoryFragment(supportFragmentManager)
             R.id.nav_map -> NavigationManager.goToMapFragment(supportFragmentManager)
-            R.id.nav_photo_booth -> NavigationManager.goToPhotoBoothFragment(supportFragmentManager)
+            R.id.nav_photobooth -> NavigationManager.goToPhotoBoothFragment(supportFragmentManager)
         }
         binding.drawer.closeDrawer(GravityCompat.START)
         return true
