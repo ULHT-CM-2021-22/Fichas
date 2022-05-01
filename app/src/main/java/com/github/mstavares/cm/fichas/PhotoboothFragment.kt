@@ -27,8 +27,6 @@ import java.io.ByteArrayOutputStream
 
 class PhotoboothFragment : Fragment() {
 
-    private val TAG = PhotoboothFragment::class.java.simpleName
-
     private lateinit var binding: FragmentPhotoBoothBinding
     private lateinit var viewModel: PhotoBoothViewModel
     private var adapter = PhotoAdapter(onClick = ::onPhotoClick)
