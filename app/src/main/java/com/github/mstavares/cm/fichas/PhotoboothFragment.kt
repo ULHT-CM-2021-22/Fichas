@@ -1,6 +1,7 @@
 package com.github.mstavares.cm.fichas
 
 import android.Manifest
+import android.app.Activity
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -10,11 +11,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.fondesa.kpermissions.allGranted
 import com.fondesa.kpermissions.extension.permissionsBuilder
 import com.fondesa.kpermissions.extension.send
@@ -25,14 +25,27 @@ import kotlinx.coroutines.launch
 import java.io.ByteArrayOutputStream
 
 
-class PhotoBoothFragment : Fragment() {
+class PhotoboothFragment : Fragment() {
 
-    private val TAG = PhotoBoothFragment::class.java.simpleName
-    private val TAKE_PHOTO_CODE = 1000
+    private val TAG = PhotoboothFragment::class.java.simpleName
 
     private lateinit var binding: FragmentPhotoBoothBinding
     private lateinit var viewModel: PhotoBoothViewModel
     private var adapter = PhotoAdapter(onClick = ::onPhotoClick)
+
+    private var cameraLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result.resultCode == Activity.RESULT_OK && result.data != null) {
+            val bitmap = result.data?.extras?.get("data") as Bitmap
+            val baos = ByteArrayOutputStream()
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos)
+            viewModel.onSavePhoto(baos.toByteArray()) {
+                CoroutineScope(Dispatchers.Main).launch {
+                    Toast.makeText(context, getString(R.string.photo_saved),Toast.LENGTH_LONG).show()
+                    viewModel.onGetAllPhotos { updatePhotos(it) }
+                }
+            }
+        }
+    }
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -53,8 +66,7 @@ class PhotoBoothFragment : Fragment() {
     private fun takePhoto() {
         permissionsBuilder(Manifest.permission.CAMERA).build().send { result ->
             if (result.allGranted()) {
-                val cameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-                startActivityForResult(cameraIntent, TAKE_PHOTO_CODE)
+                cameraLauncher.launch(Intent(MediaStore.ACTION_IMAGE_CAPTURE))
             } else {
                 Toast.makeText(context, getString(R.string.no_camera_permission), Toast.LENGTH_LONG).show()
             }
@@ -70,20 +82,6 @@ class PhotoBoothFragment : Fragment() {
     private fun updatePhotos(photos: List<PhotoUi>) {
         CoroutineScope(Dispatchers.Main).launch {
             adapter.updateItems(photos)
-        }
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, intent: Intent?) {
-        if(requestCode == TAKE_PHOTO_CODE && intent != null) {
-            val bitmap = intent.extras?.get("data") as Bitmap
-            val baos = ByteArrayOutputStream()
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos)
-            viewModel.onSavePhoto(baos.toByteArray()) {
-                CoroutineScope(Dispatchers.Main).launch {
-                    Toast.makeText(context, getString(R.string.photo_saved),Toast.LENGTH_LONG).show()
-                    viewModel.onGetAllPhotos { updatePhotos(it) }
-                }
-            }
         }
     }
 
