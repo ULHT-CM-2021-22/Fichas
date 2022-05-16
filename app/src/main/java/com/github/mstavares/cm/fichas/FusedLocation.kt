@@ -33,7 +33,7 @@ class FusedLocation private constructor(context: Context) : LocationCallback() {
         LocationServices.getSettingsClient(context)
             .checkLocationSettings(locationSettingsRequest)
 
-        client.requestLocationUpdates(locationRequest, this, Looper.getMainLooper())
+        client.requestLocationUpdates(locationRequest, this, Looper.myLooper())
     }
 
     override fun onLocationResult(locationResult: LocationResult) {
